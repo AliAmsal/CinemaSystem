@@ -19,8 +19,11 @@ public class CinemaSystem {
                 file.writeInt(7*18);
                 file.writeDouble(1000);*/
         //System.out.println("hi" + "\n\n" + "hello");
-        //goldHall h = new goldHall(5);
-        silverHall h = new silverHall(7);
+        /*goldHall h = new goldHall(8);
+        platinumHall h1 = new platinumHall(9);
+        platinumHall h2 = new platinumHall(10);
+        platinumHall h3 = new platinumHall(11);*/
+        //platinumHall h1 = new platinumHall(9);
         new Home().setVisible(true);
     }
     

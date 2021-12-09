@@ -202,14 +202,22 @@ class goldHall1 extends JFrame implements ActionListener{
                     if(c > 0) {
                         if(c <= 10){
                     int dialogresult = JOptionPane.showConfirmDialog(null, "Do you want to book these seats?","Warning",JOptionPane.YES_NO_OPTION);
-                    if(dialogresult == JOptionPane.YES_NO_OPTION) {
-                
-                        JOptionPane.showMessageDialog(null, "Seats booked.");
-                        
-                        new receipt(tempvalue,mov,cus).setVisible(true);
-                        v();
-                        
-                    }}else 
+                        if(dialogresult == JOptionPane.YES_NO_OPTION) {
+                            
+                             dialogresult = JOptionPane.showConfirmDialog(null, "Do you want to buy snacks?","Warning",JOptionPane.YES_NO_OPTION);
+                                if(dialogresult == JOptionPane.YES_NO_OPTION) {
+                                    new BuySnacks(tempvalue,mov,cus).setVisible(true);
+                                    v();
+                            
+                                }
+                                else {
+                                    JOptionPane.showMessageDialog(null, "Seats booked.");
+                                    new receipt(tempvalue,mov,cus).setVisible(true);
+                                    v();
+                                }
+                                
+                    }
+                    } else 
                         JOptionPane.showMessageDialog(null, "You can not book more than 10 seats");
                     }
                     else {

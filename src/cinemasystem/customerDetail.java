@@ -454,7 +454,8 @@ public class customerDetail extends javax.swing.JFrame {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
             con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/orclpdb", "cinema", "cinema");
-            pst = con.prepareStatement("select * from customer");
+            pst = con.prepareStatement("select name, email_address, phone from customer where cnic = ?");
+            pst.setString(1, cnicTF.getText());
             rs = pst.executeQuery();
             
             ResultSetMetaData rsd = rs.getMetaData();
@@ -462,7 +463,7 @@ public class customerDetail extends javax.swing.JFrame {
             boolean found = false;
            while(rs.next())
             {
-                Object[] array = new Object[4];
+                /*Object[] array = new Object[4];
                 
                     array[0] = rs.getString("Name");
                     array[1] = rs.getString("cnic");
@@ -471,8 +472,8 @@ public class customerDetail extends javax.swing.JFrame {
                     
                 
                   
-               
-                    if(array[1].toString().toLowerCase().equals(cnicTF.getText().toLowerCase())) {
+               */
+                    //if(rs.getString("cnic").toLowerCase().equals(cnicTF.getText().toLowerCase())) {
                         //dft.addRow(array);
                         
                         backButton.setVisible(true);
@@ -488,9 +489,9 @@ public class customerDetail extends javax.swing.JFrame {
         
                         
                         
-                        nameTF.setText(array[0].toString());
-                        addressTF.setText(array[2].toString());
-                        phoneTF.setText(array[3].toString());
+                        nameTF.setText(rs.getString("Name"));
+                        addressTF.setText(rs.getString("email_address"));
+                        phoneTF.setText(rs.getString("phone"));
                         
                         nameTF.setEditable(false);
                         addressTF.setEditable(false);
@@ -499,7 +500,7 @@ public class customerDetail extends javax.swing.JFrame {
                         found = true;
                     }
                     
-            }
+           // }
             if(!found) {
                 JOptionPane.showMessageDialog(this, "No customer found with this CNIC.");
             }

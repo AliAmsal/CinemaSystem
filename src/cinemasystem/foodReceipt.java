@@ -10,6 +10,7 @@ import static com.sun.org.apache.xalan.internal.lib.ExsltStrings.align;
 import static com.sun.org.apache.xalan.internal.lib.ExsltStrings.align;
 import java.awt.Dimension;
 import static java.awt.SystemColor.text;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.sql.Connection;
@@ -30,23 +31,72 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import oracle.net.aso.m;
 
 /**
  *
  * @author Dell
  */
-public class receipt extends javax.swing.JFrame {
+public class foodReceipt extends javax.swing.JFrame {
 
     private boolean tempvalue[][];
     private int c;
     private movie mov;
     String snos = "";
+    double total_amount = 0;
     
     Connection con;
     PreparedStatement pst;
     ResultSet rs;
 
-    public receipt(boolean[][] array,movie m, customer cus) throws IOException, ClassNotFoundException, SQLException, AddressException, MessagingException {
+    public foodReceipt(boolean[][] array,movie m, customer cus) throws IOException, ClassNotFoundException, SQLException, AddressException, MessagingException {
+        
+    }
+
+    public static void sendPlainTextEmail(String host, String port,
+            final String userName, final String password, String toAddress,
+            String subject, String message) throws AddressException,
+            MessagingException {
+
+        // sets SMTP server properties
+        Properties properties = new Properties();
+        properties.put("mail.smtp.host", host);
+        properties.put("mail.smtp.port", port);
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+// *** BEGIN CHANGE
+        properties.put("mail.smtp.user", userName);
+
+        // creates a new session, no Authenticator (will connect() later)
+        Session session = Session.getDefaultInstance(properties);
+// *** END CHANGE
+
+        // creates a new e-mail message
+        Message msg = new MimeMessage(session);
+
+        msg.setFrom(new InternetAddress(userName));
+        InternetAddress[] toAddresses = {new InternetAddress(toAddress)};
+        msg.setRecipients(Message.RecipientType.TO, toAddresses);
+        msg.setSubject(subject);
+        msg.setSentDate(new Date());
+        // set plain text message
+        msg.setContent(message, "text/html");
+
+// *** BEGIN CHANGE
+        // sends the e-mail
+        Transport t = session.getTransport("smtp");
+        t.connect(userName, password);
+        t.sendMessage(msg, msg.getAllRecipients());
+        t.close();
+// *** END CHANGE
+
+    }
+
+    foodReceipt(movie mov, customer cus) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    foodReceipt(boolean[][] array, movie m, customer cus, int items, double snack_amount) throws FileNotFoundException, IOException, ClassNotFoundException, SQLException, MessagingException {
         initComponents();
         RandomAccessFile file = new RandomAccessFile("hall.dat","rw");
         
@@ -98,8 +148,12 @@ public class receipt extends javax.swing.JFrame {
         timeTF.setEditable(false);
         nameTF.setEditable(false);
         numberTF.setEditable(false);
-        amountTF.setEditable(false);
+        ticketamountTF.setEditable(false);
         cnicTF.setEditable(false);
+        
+        itemsTF.setEditable(false);
+        snackamountTF.setEditable(false);
+        totalamountTF.setEditable(false);
         
         
         idTF.setText(Integer.toString(m.getId()));
@@ -110,8 +164,18 @@ public class receipt extends javax.swing.JFrame {
         nameTF.setText(cus.getName());
         cnicTF.setText(cus.getCnic());
         numberTF.setText(Integer.toString(c));
-        amountTF.setText(Double.toString(cus.getAmount(c, m.getHall())));
+        ticketamountTF.setText(Double.toString(cus.getAmount(c, m.getHall())));
+        itemsTF.setText(Integer.toString(items));
+        snackamountTF.setText(Double.toString(snack_amount));
+        
+        
+        
         double a = cus.getAmount(c, m.getHall());
+        
+        total_amount = a + snack_amount;
+        
+        totalamountTF.setText(Double.toString(total_amount));
+        
         Double amount = new Double(a);
        
         
@@ -132,6 +196,21 @@ public class receipt extends javax.swing.JFrame {
                 pst.setInt(10, amount.intValue());
            
                 pst.executeUpdate();
+                
+                
+                
+                Class.forName("oracle.jdbc.driver.OracleDriver");
+                con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/orclpdb", "cinema", "cinema");
+                pst = con.prepareStatement("insert into orders(name,cnic,items,amount)values(?,?,?,?) ");
+                pst.setString(1, cus.getName());
+                pst.setString(2, cnicTF.getText());
+                pst.setInt(3, items);
+                pst.setInt(4, (int) snack_amount);
+           
+                pst.executeUpdate();
+        
+                
+                
         
         
         /*try {
@@ -164,7 +243,7 @@ public class receipt extends javax.swing.JFrame {
                 = "<h1 style=color:green; text-align:center>BOOKING CONFIRMATION</h1>\n\n"
                 + "Thank you for booking tickets with E-Cinema! You can see the summary of your booking below." + "\n\n\n\n"
                 + "<h3>TICKET DETAILS</h3>" + "\n"
-                + "<br><b>Customer Name: </b>" + cus.getName()
+                + "<b>Customer Name: </b>" + cus.getName()
                 + "<br><b>Customer CNIC: </b>" + cus.getCnic()
                 + "<br><b>Movie Show ID: </b>" + m.getId()
                 + "<br><b>Movie Title: </b>" + m.getTitle()
@@ -173,49 +252,17 @@ public class receipt extends javax.swing.JFrame {
                 + "<br><b>Show Timing: </b>" + m.getTime()
                 + "<br><b>Number of Tickets: </b>" + c
                 + "<br><b>Seat Numbers: </b>" + snos
-                + "<br><b>Total Amount: </b>" + a;
+                + "<br><b>Ticket Amount: </b>" + a
+                + "<br><b>------------------------------- </b>"
+                + "<h3>SNACK ORDER DETAILS</h3>" + "\n"
+                + "<b>Snack Items: </b>" + items
+                + "<br><b>Snack Amount: </b>" + snack_amount
+                + "<br><b>------------------------------- </b>"
+                + "<br><b>Total Amount: </b>" + total_amount
+                + "<br><b>------------------------------- </b>";
 
         sendPlainTextEmail(host, port, username, password, to, subject, message);
         jLabel13.setText("Booking Details have been emailed at:  " + cus.getAddress());
-
-    }
-
-    public static void sendPlainTextEmail(String host, String port,
-            final String userName, final String password, String toAddress,
-            String subject, String message) throws AddressException,
-            MessagingException {
-
-        // sets SMTP server properties
-        Properties properties = new Properties();
-        properties.put("mail.smtp.host", host);
-        properties.put("mail.smtp.port", port);
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
-// *** BEGIN CHANGE
-        properties.put("mail.smtp.user", userName);
-
-        // creates a new session, no Authenticator (will connect() later)
-        Session session = Session.getDefaultInstance(properties);
-// *** END CHANGE
-
-        // creates a new e-mail message
-        Message msg = new MimeMessage(session);
-
-        msg.setFrom(new InternetAddress(userName));
-        InternetAddress[] toAddresses = {new InternetAddress(toAddress)};
-        msg.setRecipients(Message.RecipientType.TO, toAddresses);
-        msg.setSubject(subject);
-        msg.setSentDate(new Date());
-        // set plain text message
-        msg.setContent(message, "text/html");
-
-// *** BEGIN CHANGE
-        // sends the e-mail
-        Transport t = session.getTransport("smtp");
-        t.connect(userName, password);
-        t.sendMessage(msg, msg.getAllRecipients());
-        t.close();
-// *** END CHANGE
 
     }
 
@@ -248,14 +295,20 @@ public class receipt extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         seatsTF = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
-        amountTF = new javax.swing.JTextField();
+        ticketamountTF = new javax.swing.JTextField();
         btnExit = new javax.swing.JButton();
         btnBackToMovies = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         cnicTF = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        jLabel14 = new javax.swing.JLabel();
+        itemsTF = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        snackamountTF = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        totalamountTF = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Receipt");
@@ -303,7 +356,7 @@ public class receipt extends javax.swing.JFrame {
         getContentPane().add(nameTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 100, 211, -1));
 
         jLabel8.setText("Number of Tickets:");
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 380, -1, -1));
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 380, -1, -1));
         getContentPane().add(numberTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 380, 211, -1));
 
         jLabel9.setText("Seat Numbers:");
@@ -311,15 +364,15 @@ public class receipt extends javax.swing.JFrame {
 
         getContentPane().add(seatsTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 420, 211, -1));
 
-        jLabel10.setText("Total Amount:");
+        jLabel10.setText("Ticket Amount:");
         getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 460, -1, -1));
 
-        amountTF.addActionListener(new java.awt.event.ActionListener() {
+        ticketamountTF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                amountTFActionPerformed(evt);
+                ticketamountTFActionPerformed(evt);
             }
         });
-        getContentPane().add(amountTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 460, 211, -1));
+        getContentPane().add(ticketamountTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 460, 211, -1));
 
         btnExit.setBackground(new java.awt.Color(255, 255, 255));
         btnExit.setText("Exit");
@@ -328,7 +381,7 @@ public class receipt extends javax.swing.JFrame {
                 btnExitActionPerformed(evt);
             }
         });
-        getContentPane().add(btnExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 550, 120, 30));
+        getContentPane().add(btnExit, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 660, 120, 30));
 
         btnBackToMovies.setBackground(new java.awt.Color(255, 255, 255));
         btnBackToMovies.setText("Back to Movies");
@@ -337,7 +390,7 @@ public class receipt extends javax.swing.JFrame {
                 btnBackToMoviesActionPerformed(evt);
             }
         });
-        getContentPane().add(btnBackToMovies, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 550, -1, 30));
+        getContentPane().add(btnBackToMovies, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 660, -1, 30));
         getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, -10, 440, -1));
 
         jLabel12.setText("CNIC:");
@@ -346,8 +399,32 @@ public class receipt extends javax.swing.JFrame {
 
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel13.setText("jLabel13");
-        getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(-2, 510, 440, -1));
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 440, 610));
+        getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 630, 440, -1));
+
+        jLabel14.setText("Snack Items:");
+        getContentPane().add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 500, -1, -1));
+
+        itemsTF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemsTFActionPerformed(evt);
+            }
+        });
+        getContentPane().add(itemsTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 500, 210, -1));
+
+        jLabel15.setText("Snacks Amount:");
+        getContentPane().add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 540, -1, -1));
+        getContentPane().add(snackamountTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 540, 210, -1));
+
+        jLabel16.setText("Total Amount:");
+        getContentPane().add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 580, -1, -1));
+
+        totalamountTF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                totalamountTFActionPerformed(evt);
+            }
+        });
+        getContentPane().add(totalamountTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 580, 210, -1));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 440, 730));
 
         pack();
         setLocationRelativeTo(null);
@@ -361,18 +438,18 @@ public class receipt extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_idTFActionPerformed
 
-    private void amountTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_amountTFActionPerformed
+    private void ticketamountTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ticketamountTFActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_amountTFActionPerformed
+    }//GEN-LAST:event_ticketamountTFActionPerformed
 
     private void btnBackToMoviesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackToMoviesActionPerformed
         try {
             new bookMovies().setVisible(true);
             this.setVisible(false);
         } catch (SQLException ex) {
-            Logger.getLogger(receipt.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(foodReceipt.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(receipt.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(foodReceipt.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }//GEN-LAST:event_btnBackToMoviesActionPerformed
@@ -380,6 +457,14 @@ public class receipt extends javax.swing.JFrame {
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         System.exit(0);
     }//GEN-LAST:event_btnExitActionPerformed
+
+    private void itemsTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemsTFActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_itemsTFActionPerformed
+
+    private void totalamountTFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_totalamountTFActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_totalamountTFActionPerformed
 
     /**
      * @param args the command line arguments
@@ -398,14 +483,15 @@ public class receipt extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(receipt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(foodReceipt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(receipt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(foodReceipt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(receipt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(foodReceipt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(receipt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(foodReceipt.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
@@ -415,33 +501,36 @@ public class receipt extends javax.swing.JFrame {
                 movie m = null;
                 customer c = null;
                 try {
-                    new receipt(a,m,c).setVisible(true);
+                    new foodReceipt(a,m,c).setVisible(true);
                 } catch (IOException ex) {
-                    Logger.getLogger(receipt.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(foodReceipt.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(receipt.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(foodReceipt.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (SQLException ex) {
-                    Logger.getLogger(receipt.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(foodReceipt.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (MessagingException ex) {
-                    Logger.getLogger(receipt.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(foodReceipt.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField amountTF;
     private javax.swing.JButton btnBackToMovies;
     private javax.swing.JButton btnExit;
     private javax.swing.JTextField cnicTF;
     private javax.swing.JTextField dateTF;
     private javax.swing.JTextField hallTF;
     private javax.swing.JTextField idTF;
+    private javax.swing.JTextField itemsTF;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -450,12 +539,15 @@ public class receipt extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField nameTF;
     private javax.swing.JTextField numberTF;
     private javax.swing.JComboBox<String> seatsTF;
+    private javax.swing.JTextField snackamountTF;
+    private javax.swing.JTextField ticketamountTF;
     private javax.swing.JTextField timeTF;
     private javax.swing.JTextField titleTF;
+    private javax.swing.JTextField totalamountTF;
     // End of variables declaration//GEN-END:variables
 }

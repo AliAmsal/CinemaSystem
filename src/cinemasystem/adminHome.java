@@ -40,67 +40,106 @@ public class adminHome extends javax.swing.JFrame {
         btnUpdateHalls = new javax.swing.JButton();
         btnUpdateCredentials = new javax.swing.JButton();
         logoutButton = new javax.swing.JButton();
+        Orders = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Admin");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Admin");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 30, -1, -1));
+        jLabel1.setFont(new java.awt.Font("Candara", 1, 45)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 153, 0));
+        jLabel1.setText("DASHBOARD");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 50, 260, 40));
 
-        jSeparator1.setForeground(new java.awt.Color(255, 255, 255));
-        getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 70, 110, 10));
+        jSeparator1.setBackground(new java.awt.Color(255, 153, 0));
+        jSeparator1.setForeground(new java.awt.Color(255, 153, 0));
+        getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 90, 250, 10));
 
-        addMoviesButton.setBackground(new java.awt.Color(255, 255, 255));
-        addMoviesButton.setText("Add Movies");
+        addMoviesButton.setBackground(new java.awt.Color(204, 255, 204));
+        addMoviesButton.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        addMoviesButton.setForeground(new java.awt.Color(255, 255, 255));
+        addMoviesButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cinemasystem/addmovies.jpeg"))); // NOI18N
+        addMoviesButton.setText("  Add Movies");
+        addMoviesButton.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        addMoviesButton.setContentAreaFilled(false);
         addMoviesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 addMoviesButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(addMoviesButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 130, 140, -1));
+        getContentPane().add(addMoviesButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 140, 230, 100));
 
         updateMoviesButton.setBackground(new java.awt.Color(255, 255, 255));
-        updateMoviesButton.setText("Update Movies");
+        updateMoviesButton.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        updateMoviesButton.setForeground(new java.awt.Color(255, 255, 255));
+        updateMoviesButton.setIcon(new javax.swing.ImageIcon("C:\\Users\\newac\\Downloads\\updatemovies.jpeg")); // NOI18N
+        updateMoviesButton.setText(" Update Movies");
+        updateMoviesButton.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        updateMoviesButton.setContentAreaFilled(false);
         updateMoviesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateMoviesButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(updateMoviesButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 130, 140, -1));
+        getContentPane().add(updateMoviesButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 140, 230, 100));
 
         btnUpdateHalls.setBackground(new java.awt.Color(255, 255, 255));
+        btnUpdateHalls.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        btnUpdateHalls.setForeground(new java.awt.Color(255, 255, 255));
+        btnUpdateHalls.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cinemasystem/updatehalls.jpeg"))); // NOI18N
         btnUpdateHalls.setText("Update Halls");
+        btnUpdateHalls.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnUpdateHalls.setContentAreaFilled(false);
         btnUpdateHalls.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateHallsActionPerformed(evt);
             }
         });
-        getContentPane().add(btnUpdateHalls, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 200, 140, -1));
+        getContentPane().add(btnUpdateHalls, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 140, 230, 100));
 
         btnUpdateCredentials.setBackground(new java.awt.Color(255, 255, 255));
+        btnUpdateCredentials.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        btnUpdateCredentials.setForeground(new java.awt.Color(255, 255, 255));
+        btnUpdateCredentials.setIcon(new javax.swing.ImageIcon("C:\\Users\\newac\\Downloads\\updatecredentials.jpeg")); // NOI18N
         btnUpdateCredentials.setText("Update Credentials");
+        btnUpdateCredentials.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnUpdateCredentials.setContentAreaFilled(false);
         btnUpdateCredentials.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateCredentialsActionPerformed(evt);
             }
         });
-        getContentPane().add(btnUpdateCredentials, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 200, -1, -1));
+        getContentPane().add(btnUpdateCredentials, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 290, 230, 100));
 
         logoutButton.setBackground(new java.awt.Color(204, 0, 0));
+        logoutButton.setFont(new java.awt.Font("Candara", 1, 14)); // NOI18N
+        logoutButton.setForeground(new java.awt.Color(255, 255, 255));
+        logoutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cinemasystem/logout.jpeg"))); // NOI18N
         logoutButton.setText("Logout");
+        logoutButton.setContentAreaFilled(false);
         logoutButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 logoutButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(logoutButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 310, -1, -1));
+        getContentPane().add(logoutButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 430, 160, 50));
 
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cinemasystem/cinema.jpg"))); // NOI18N
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+        Orders.setFont(new java.awt.Font("Candara", 0, 14)); // NOI18N
+        Orders.setForeground(new java.awt.Color(255, 255, 255));
+        Orders.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cinemasystem/bookinghistory.jpeg"))); // NOI18N
+        Orders.setText("Booking History");
+        Orders.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        Orders.setContentAreaFilled(false);
+        Orders.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OrdersActionPerformed(evt);
+            }
+        });
+        getContentPane().add(Orders, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 290, 230, 100));
+
+        jLabel3.setIcon(new javax.swing.ImageIcon("C:\\Users\\newac\\Downloads\\WhatsApp Image 2021-12-08 at 9.00.32 PM.jpeg")); // NOI18N
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1020, 520));
 
         pack();
         setLocationRelativeTo(null);
@@ -138,13 +177,23 @@ public class adminHome extends javax.swing.JFrame {
         try {
             new updateMovies().setVisible(true);
             this.setVisible(false);
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(adminHome.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_updateMoviesButtonActionPerformed
+
+    private void OrdersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrdersActionPerformed
+        try {
+            // TODO add your handling code here:
+            new BookingHistory().setVisible(true);
         } catch (SQLException ex) {
             Logger.getLogger(adminHome.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(adminHome.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-    }//GEN-LAST:event_updateMoviesButtonActionPerformed
+        this.setVisible(false);
+    }//GEN-LAST:event_OrdersActionPerformed
 
     /**
      * @param args the command line arguments
@@ -182,6 +231,7 @@ public class adminHome extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Orders;
     private javax.swing.JButton addMoviesButton;
     private javax.swing.JButton btnUpdateCredentials;
     private javax.swing.JButton btnUpdateHalls;

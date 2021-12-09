@@ -5,6 +5,8 @@
  */
 package cinemasystem;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.Connection;
@@ -18,7 +20,9 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -41,6 +45,12 @@ public class searchMovies extends javax.swing.JFrame {
         dateTF.setEditable(false);
         timeTF.setEditable(false);
         hallTF.setEditable(false);
+        
+        table.getTableHeader().setBackground(Color.orange);
+        table.getTableHeader().setForeground(Color.black);
+        Font font = new Font("Candara", Font.BOLD, 18);
+        table.getTableHeader().setFont(font);
+        table.getTableHeader().setSize(40, 40);
     }
 
     /**
@@ -80,23 +90,32 @@ public class searchMovies extends javax.swing.JFrame {
         backButton = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
         searchTF = new javax.swing.JTextField();
-        btnSearch = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        btnSearch = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("View Movies");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Dialog", 1, 36)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText(" Movie Shows");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 20, 240, -1));
+        jLabel1.setFont(new java.awt.Font("Candara", 3, 48)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 153, 0));
+        jLabel1.setText("MOVIE SHOWS");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 20, 330, -1));
 
-        jSeparator1.setForeground(new java.awt.Color(255, 255, 255));
+        jSeparator1.setBackground(new java.awt.Color(255, 153, 0));
+        jSeparator1.setForeground(new java.awt.Color(255, 153, 0));
         getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 70, 338, 10));
 
+        table.setBackground(new java.awt.Color(0, 0, 0));
+        table.setFont(new java.awt.Font("Agency FB", 1, 18)); // NOI18N
+        table.setForeground(new java.awt.Color(255, 255, 255));
         table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
@@ -106,6 +125,8 @@ public class searchMovies extends javax.swing.JFrame {
                 "showID", "Movie Title", "Genre", "Rating", "Duration", "Date", "Show Time", "Hall Category"
             }
         ));
+        table.setRowHeight(25);
+        table.setSelectionBackground(new java.awt.Color(255, 153, 0));
         table.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tableMouseClicked(evt);
@@ -115,15 +136,22 @@ public class searchMovies extends javax.swing.JFrame {
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 220, 1110, 210));
 
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 153, 0));
         jLabel3.setText("showID :");
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 480, -1, -1));
+
+        idTF.setBackground(new java.awt.Color(0, 0, 0));
+        idTF.setForeground(new java.awt.Color(255, 255, 255));
         getContentPane().add(idTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 480, 88, -1));
 
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 153, 0));
         jLabel4.setText("Movie Title :");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 480, -1, -1));
 
+        titleTF.setBackground(new java.awt.Color(0, 0, 0));
+        titleTF.setForeground(new java.awt.Color(255, 255, 255));
         titleTF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 titleTFActionPerformed(evt);
@@ -131,20 +159,31 @@ public class searchMovies extends javax.swing.JFrame {
         });
         getContentPane().add(titleTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 480, 284, -1));
 
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 153, 0));
         jLabel5.setText("Genre :");
         getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 480, -1, -1));
+
+        genreTF.setBackground(new java.awt.Color(0, 0, 0));
+        genreTF.setForeground(new java.awt.Color(255, 255, 255));
         getContentPane().add(genreTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 480, 247, -1));
 
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 153, 0));
         jLabel6.setText("Rating :");
         getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 480, -1, -1));
+
+        ratingTF.setBackground(new java.awt.Color(0, 0, 0));
+        ratingTF.setForeground(new java.awt.Color(255, 255, 255));
         getContentPane().add(ratingTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(1070, 480, 81, -1));
 
-        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 153, 0));
         jLabel7.setText("Duration :");
         getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 540, -1, -1));
 
+        durationTF.setBackground(new java.awt.Color(0, 0, 0));
+        durationTF.setForeground(new java.awt.Color(255, 255, 255));
         durationTF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 durationTFActionPerformed(evt);
@@ -152,20 +191,31 @@ public class searchMovies extends javax.swing.JFrame {
         });
         getContentPane().add(durationTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 540, 140, -1));
 
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 153, 0));
         jLabel8.setText("Date :");
         getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 540, -1, -1));
+
+        dateTF.setBackground(new java.awt.Color(0, 0, 0));
+        dateTF.setForeground(new java.awt.Color(255, 255, 255));
         getContentPane().add(dateTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 540, 284, -1));
 
-        jLabel9.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(255, 153, 0));
         jLabel9.setText("Show Time :");
         getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 540, -1, -1));
+
+        timeTF.setBackground(new java.awt.Color(0, 0, 0));
+        timeTF.setForeground(new java.awt.Color(255, 255, 255));
         getContentPane().add(timeTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 540, 136, -1));
 
-        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 153, 0));
         jLabel10.setText("Hall Category :");
         getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 540, -1, -1));
 
+        hallTF.setBackground(new java.awt.Color(0, 0, 0));
+        hallTF.setForeground(new java.awt.Color(255, 255, 255));
         hallTF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 hallTFActionPerformed(evt);
@@ -174,7 +224,7 @@ public class searchMovies extends javax.swing.JFrame {
         getContentPane().add(hallTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 540, 133, -1));
 
         jLabel11.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setForeground(new java.awt.Color(255, 153, 0));
         jLabel11.setText("Click on the movie to book ticket.");
         getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 180, -1, -1));
 
@@ -184,7 +234,10 @@ public class searchMovies extends javax.swing.JFrame {
 
         bookButton.setBackground(new java.awt.Color(0, 255, 0));
         bookButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        bookButton.setText("Book");
+        bookButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cinemasystem/right-arrow (1) (1).png"))); // NOI18N
+        bookButton.setBorderPainted(false);
+        bookButton.setContentAreaFilled(false);
+        bookButton.setFocusPainted(false);
         bookButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bookButtonActionPerformed(evt);
@@ -192,32 +245,45 @@ public class searchMovies extends javax.swing.JFrame {
         });
         getContentPane().add(bookButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 590, 100, -1));
 
-        jSeparator2.setForeground(new java.awt.Color(255, 255, 255));
+        jSeparator2.setBackground(new java.awt.Color(255, 153, 0));
+        jSeparator2.setForeground(new java.awt.Color(255, 153, 0));
         getContentPane().add(jSeparator2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 200, 240, 10));
 
         jSeparator3.setForeground(new java.awt.Color(255, 255, 255));
         getContentPane().add(jSeparator3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 410, 290, -1));
 
         backButton.setBackground(new java.awt.Color(255, 0, 0));
+        backButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cinemasystem/previous (2) (1).png"))); // NOI18N
         backButton.setText("Back");
+        backButton.setBorderPainted(false);
+        backButton.setContentAreaFilled(false);
+        backButton.setFocusPainted(false);
         backButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 backButtonActionPerformed(evt);
             }
         });
-        getContentPane().add(backButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 630, 100, -1));
+        getContentPane().add(backButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 30, 100, -1));
 
-        jLabel13.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 153, 0));
         jLabel13.setText("Enter Movie Name to Search:");
-        getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 100, -1, -1));
+        getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 100, -1, -1));
 
         searchTF.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchTFActionPerformed(evt);
             }
         });
+        searchTF.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                searchTFKeyReleased(evt);
+            }
+        });
         getContentPane().add(searchTF, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 100, 340, -1));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cinemasystem/movies.jpg"))); // NOI18N
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         btnSearch.setBackground(new java.awt.Color(0, 255, 0));
         btnSearch.setIcon(new javax.swing.ImageIcon("C:\\Users\\newac\\Downloads\\search (3).png")); // NOI18N
@@ -230,9 +296,6 @@ public class searchMovies extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 90, 60, 40));
-
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cinemasystem/movies.jpg"))); // NOI18N
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
         setLocationRelativeTo(null);
@@ -286,7 +349,7 @@ public class searchMovies extends javax.swing.JFrame {
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");
             con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/orclpdb", "cinema", "cinema");
-            pst = con.prepareStatement("select * from movies");
+            pst = con.prepareStatement("select * from movies order by show_id");
             rs = pst.executeQuery();
             
             ResultSetMetaData rsd = rs.getMetaData();
@@ -366,8 +429,52 @@ public class searchMovies extends javax.swing.JFrame {
         }*/
     }//GEN-LAST:event_btnSearchActionPerformed
 
-    
-    
+    private void searchTFKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchTFKeyReleased
+        /*String query = searchTF.getText().toUpperCase();
+        Searching(query);*/
+         try {
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+            con = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/orclpdb", "cinema", "cinema");
+            pst = con.prepareStatement("select * from movies order by show_id");
+            rs = pst.executeQuery();
+            
+            ResultSetMetaData rsd = rs.getMetaData();
+            DefaultTableModel dft = (DefaultTableModel)table.getModel();
+            dft.setRowCount(0);
+            boolean found = false;
+           while(rs.next())
+            {
+                Object[] array = new Object[8];
+                    //jComboBox1.addItem(e);
+                    array[0] = rs.getInt("show_ID");
+                    array[1] = rs.getString("title");
+                    array[2] = rs.getString("genre");                   
+                    array[3] = rs.getString("rating");
+                    
+                    //Object[] duration = rs.getString("duration").split(" ");
+                    array[4] = rs.getString("hours") + " hours " + rs.getString("minutes") + " mins";
+                    //Object[] date = rs.getString("datee").split(" ");
+                    array[5] = rs.getInt("day") + "-" + rs.getString("month") + "-2021";
+                    array[6] = rs.getString("time");
+                    array[7] = rs.getString("hall_category");
+               
+                    if(array[1].toString().toLowerCase().contains(searchTF.getText().toLowerCase())) {
+                        dft.addRow(array);
+                        found = true;
+                    }
+                    
+            }
+            if(!found) {
+                JOptionPane.showMessageDialog(this, "No movies found with this name.");
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(searchMovies.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(searchMovies.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_searchTFKeyReleased
+
+   
     
     /**
      * @param args the command line arguments

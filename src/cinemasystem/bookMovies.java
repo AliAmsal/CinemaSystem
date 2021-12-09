@@ -298,10 +298,13 @@ public class bookMovies extends javax.swing.JFrame {
     }//GEN-LAST:event_durationTFActionPerformed
 
     private void bookButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bookButtonActionPerformed
-        if(!idTF.getText().isEmpty()) {
-        movie m = new movie(Integer.parseInt(idTF.getText()),titleTF.getText(),genreTF.getText(),ratingTF.getText(),durationTF.getText(),dateTF.getText(),timeTF.getText(),hallTF.getText());
-        new customerDetail(m).setVisible(true);
-        this.setVisible(false);
+        if (!idTF.getText().isEmpty()) {
+            movie m = new movie(Integer.parseInt(idTF.getText()), titleTF.getText(), genreTF.getText(), ratingTF.getText(), durationTF.getText(), dateTF.getText(), timeTF.getText(), hallTF.getText());
+            new customerDetail(m).setVisible(true);
+            this.setVisible(false);
+        } else {
+            JOptionPane.showMessageDialog(this, "Please select a Movie Show to proceed.");
+
         }
     }//GEN-LAST:event_bookButtonActionPerformed
 
